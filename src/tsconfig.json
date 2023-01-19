@@ -25,8 +25,7 @@
     /* The strict flag enables a wide range of type checking behavior that results in stronger guarantees of program correctness. */
     "strict": true,
     /* The target setting changes which JS features are downleveled and which are left intact. */
-    // "target": "es5",
-    "target": "es2017",
+    "target": "es2017", // top-level await
     /* In some cases where no type annotations are present, TypeScript will fall back to a type of any for a variable when it cannot infer the type. */
     /* *** TEMPORARILY ADDED UNTIL ALL MODULES HAVE BEEN REFACTORED!!!!!!!!!!! *** */
     "noImplicitAny": false,
