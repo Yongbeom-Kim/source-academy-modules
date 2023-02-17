@@ -149,7 +149,8 @@ export const esbuildOptions: ESBuildOptions = {
     '.tsx': 'tsx',
   },
   // minify: true,
-  platform: 'browser',
+  // platform: 'browser',
+  platform: 'node',
   target: 'es6',
   write: false,
 };
