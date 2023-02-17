@@ -1,4 +1,3 @@
-import { parse } from 'path';
 import wabt from 'wabt';
 
 let wabtModule;
@@ -29,12 +28,13 @@ export async function parse_wat_expression(wasm_text: string): Promise<Uint8Arra
 }
 
 export function parse_wat(wasm_text: string): Uint8Array {
-  return wabtModule.parseWat('', wasm_text).toBinary({}).buffer;
+  return wabtModule.parseWat('', wasm_text)
+    .toBinary({}).buffer;
 }
 
 export function execute_wasm(buffer: Uint8Array) {
   // const webInstance = await WebAssembly.instantiate(buffer, importObject);
-  const webInstance = new WebAssembly.Instance(buffer, importObject);
+  const webInstance = new WebAssembly.Instance(new WebAssembly.Module(buffer), importObject);
   // @ts-ignore, we explicitly export a main function (and therefore is callable).
   return webInstance.instance.exports.main();
 }
