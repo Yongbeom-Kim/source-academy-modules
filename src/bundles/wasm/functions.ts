@@ -1,9 +1,6 @@
 import wabt from 'wabt';
 
-let wabtModule;
-wabt()
-  .then((wabt_resolved) => (wabtModule = wabt_resolved));
-
+let wabtModule = await wabt();
 let display: (x: any) => any;
 
 export function init(display_fn: (x: any) => any) {

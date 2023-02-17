@@ -151,6 +151,6 @@ export const esbuildOptions: ESBuildOptions = {
   // minify: true,
   // platform: 'browser',
   platform: 'node',
-  target: 'es6',
+  target: 'es2022',
   write: false,
 };
