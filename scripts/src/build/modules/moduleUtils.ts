@@ -1,4 +1,5 @@
 import type { BuildOptions as ESBuildOptions } from 'esbuild';
+import { polyfillNode } from 'esbuild-plugin-polyfill-node'; // Node polyfills are required for bundling emscripten-compiled modules.
 import type {
   BinaryExpression,
   FunctionDeclaration,
@@ -148,9 +149,11 @@ export const esbuildOptions: ESBuildOptions = {
     '.ts': 'ts',
     '.tsx': 'tsx',
   },
+  plugins: [
+    polyfillNode({}),
+  ],
   // minify: true,
-  // platform: 'browser',
-  platform: 'node',
+  platform: 'browser',
   target: 'es6',
   write: false,
 };

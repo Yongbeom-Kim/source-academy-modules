@@ -87,6 +87,7 @@
     "ace-builds": "^1.4.14",
     "classnames": "^2.3.1",
     "dayjs": "^1.10.4",
+    "esbuild-plugin-polyfill-node": "^0.1.4",
     "gl-matrix": "^3.3.0",
     "js-slang": "^0.5.38",
     "lodash": "^4.17.21",

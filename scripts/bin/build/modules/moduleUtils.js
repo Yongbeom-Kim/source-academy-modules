@@ -1,3 +1,4 @@
+import { polyfillNode } from 'esbuild-plugin-polyfill-node'; // Node polyfills are required for bundling emscripten-compiled modules.
 /**
  * Build the AST representation of a `require` function to use with the transpiled IIFEs
  */
@@ -130,9 +131,11 @@ export const esbuildOptions = {
         '.ts': 'ts',
         '.tsx': 'tsx',
     },
+    plugins: [
+      polyfillNode({}),
+    ],
     // minify: true,
-    // platform: 'browser',
-    platform: 'node',
+    platform: 'browser',
     target: 'es6',
     write: false,
 };
