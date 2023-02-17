@@ -34,6 +34,8 @@ export async function execute_wasm(wasm_buffer: Uint8Array | Promise<Uint8Array>
   return webInstance.instance.exports.main();
 }
 
+const display_promise = Promise.resolve(1);
 export async function display_wasm(value: any) {
-  display(await Promise.resolve(value));
+  // we use a chain of promises to guarantee order.
+  display_promise.finally(async () => display(await Promise.resolve(value)));
 }
