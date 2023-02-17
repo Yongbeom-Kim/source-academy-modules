@@ -1,4 +1,3 @@
-import { parse } from 'path';
 import wabt from 'wabt';
 
 let display: (x: any) => any;
