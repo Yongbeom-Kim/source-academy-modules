@@ -35,7 +35,6 @@ export async function execute_wasm(wasm_buffer: Uint8Array | Promise<Uint8Array>
   return webInstance.instance.exports.main();
 }
 
-export async function display_wasm(any: any) {
-  const resolved = await Promise.resolve(any);
-  display(resolved);
+export async function display_wasm(value: any) {
+  display(await Promise.resolve(value));
 }
