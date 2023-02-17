@@ -34,8 +34,18 @@ export async function execute_wasm(wasm_buffer: Uint8Array | Promise<Uint8Array>
   return webInstance.instance.exports.main();
 }
 
-const display_promise = Promise.resolve(1);
+let display_promise = Promise.resolve(1);
+/**
+ * A function to display any value.
+ * Most notably, displays values encapsulated in promises.
+ * Relative order of display_wasm is guaranteed.
+ * There must be a display_wasm function call at the END of the source program.
+ * There must be an init(display) function call at the START of the source program.
+ * @param value value or promise to display
+ * @returns a promise that resolves once value is displayed. This is useless except for Source's peculiar awaiting of promises if they are at the end of the program.
+ */
 export async function display_wasm(value: any) {
   // we use a chain of promises to guarantee order.
-  display_promise.finally(() => Promise.resolve(value).then(display));
+  display_promise = display_promise.finally(() => Promise.resolve(value).then(display));
+  return display_promise;
 }
