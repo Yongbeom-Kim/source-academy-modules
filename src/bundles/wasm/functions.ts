@@ -1,9 +1,13 @@
 import { parse } from 'path';
 import wabt from 'wabt';
 
+let wabtModule;
+
 let display: (x: any) => any;
 
 export function init(display_fn: (x: any) => any) {
+  wabt()
+    .then((wabt_resolved) => (wabtModule = wabt_resolved));
   display = display_fn;
 }
 
@@ -24,13 +28,13 @@ export async function parse_wat_expression(wasm_text: string): Promise<Uint8Arra
   return parse_wat(wasm_module);
 }
 
-export async function parse_wat(wasm_text: string): Promise<Uint8Array> {
-  return wabt().then(wabt => wabt.parseWat('', wasm_text).toBinary({}).buffer);
+export function parse_wat(wasm_text: string): Uint8Array {
+  return wabtModule.parseWat('', wasm_text).toBinary({}).buffer;
 }
 
-export async function execute_wasm(wasm_buffer: Uint8Array | Promise<Uint8Array>) {
-  const resolved_buffer = await Promise.resolve(wasm_buffer);
-  const webInstance = await WebAssembly.instantiate(resolved_buffer, importObject);
+export function execute_wasm(buffer: Uint8Array) {
+  // const webInstance = await WebAssembly.instantiate(buffer, importObject);
+  const webInstance = new WebAssembly.Instance(buffer, importObject);
   // @ts-ignore, we explicitly export a main function (and therefore is callable).
   return webInstance.instance.exports.main();
 }
