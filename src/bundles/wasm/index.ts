@@ -82,8 +82,6 @@
  * @author Kim Yongbeom
  */
 export {
-  get_wat_module,
-  compile_wat_module,
-  run_wat_module,
+  wcompile,
+  wrun,
 } from './wabt';
-

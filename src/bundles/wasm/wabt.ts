@@ -4,45 +4,31 @@ import {
   compile,
 } from 'source-academy-wabt';
 
-import { type ModuleExpression } from 'source-academy-wabt/types/wat_compiler/ir_types';
 import { objectToLinkedList } from 'source-academy-utils';
 
 /**
- * Compile a (hopefully valid) WebAssembly Text module to an intermediate representation.
+ * Compile a (hopefully valid) WebAssembly Text module to a WebAssembly binary.
  * @param program program to compile
- * @returns an intermediate representation.
+ * @returns a WebAssembly binary.
  */
-export const get_wat_module = (program: string) => {
+type LinkedList<T> = [T, LinkedList<T>] | null;
+
+export const wcompile = (program: string) => {
   const ir = getIR(parse(program));
-
-  return ir;
-};
-
-// export const add_function_import = (
-//   moduleObject: ModuleExpression,
-//   importFunction: Function,
-//   importModule: string,
-//   importName: string,
-//   functionName: string,
-//   paramTypes: ValueType[],
-//   returnTypes: ValueType[],
-// ) => {
-//   const [, imports] = moduleObject;
-//   const functionImport = createFunctionImport(importModule, importName, functionName, paramTypes, returnTypes);
-//   wabt_module.addImportExpression(functionImport);
-//   if (imports[importModule] === undefined) {
-//     imports[importModule] = {};
-//   }
-//   imports[importModule][importName] = importFunction;
-//   return [wabt_module, imports];
-// };
-
-export const compile_wat_module = (wasm_module: ModuleExpression) => {
-  const binary = compile(wasm_module);
+  const binary = compile(ir);
   return Array.from(binary);
 };
 
-const convert_import_list_to_import_object = (imports: [string, [string, [Function, null]]][]): Map<string, Map<string, Function>> => {
+const linked_list_to_array = <T>(list: LinkedList<T>): T[] => {
+  const array = [];
+  while (list !== null) {
+    array.push(list[0]);
+    list = list[1];
+  }
+  return array;
+};
+
+const import_list_to_import_object = (imports: [string, [string, [Function, null]]][]): Map<string, Map<string, Function>> => {
   const importObject = {};
   for (const imp of imports) {
     importObject[imp[0]] = {};
@@ -57,7 +43,7 @@ const convert_import_list_to_import_object = (imports: [string, [string, [Functi
  * @param imports function imports
  * @returns a linked list of exports that the relevant WebAssembly Module exports
  */
-export const run_wat_module = (buffer: number[] | Uint8Array, ...imports: [string, [string, [Function, null]]]) => {
+export const wrun = (buffer: number[] | Uint8Array, imports: LinkedList<[string, [string, [Function, null]]]>) => {
   if (buffer instanceof Array) {
     buffer = new Uint8Array(buffer);
   }
@@ -66,6 +52,6 @@ export const run_wat_module = (buffer: number[] | Uint8Array, ...imports: [strin
 
   // this is a valid import object, but WebAssembly ImportObjects typing just sucks.
   //@ts-ignore
-  const exps = new WebAssembly.Instance(new WebAssembly.Module(buffer), convert_import_list_to_import_object(imports)).exports;
+  const exps = new WebAssembly.Instance(new WebAssembly.Module(buffer), import_list_to_import_object(linked_list_to_array(imports))).exports;
   return objectToLinkedList(exps);
 };
