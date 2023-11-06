@@ -84,4 +84,6 @@
 export {
   wcompile,
   wrun,
+  get_export_by_name,
+  repl_evaluator_with_main,
 } from './wabt';
